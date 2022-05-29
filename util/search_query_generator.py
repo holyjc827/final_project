@@ -6,20 +6,10 @@ class SearchQueryGenerator:
         self.type = type
         self.document_parser = DocumentParser(document_path)
 
-    def generate_search_query(self):
-        most_repeated_keywords = self.__get_most_repeated_keywords()
-        query_string = ""
-        for word in most_repeated_keywords:
-            if len(query_string) == 0:
-                query_string = '"' + word + '"'
-            else:
-                query_string += ' AND ' + '"' + word + '"'
-        return query_string
-
     def classify(self): # TODO: classify the document with machine learning algo
         match self.type:
             case 'developer':
-                return self.generate_search_query()
+                return self.__generate_search_query()
             case _:
                 return
 
@@ -39,3 +29,13 @@ class SearchQueryGenerator:
         token_dict = dict(sorted(token_dict.items(), key=lambda item: item[1], reverse=True))
         repeated_keywords = [k for k, v in dict(itertools.islice(token_dict.items(), 5)).items()]
         return repeated_keywords
+    
+    def __generate_search_query(self):
+        most_repeated_keywords = self.__get_most_repeated_keywords()
+        query_string = ""
+        for word in most_repeated_keywords:
+            if len(query_string) == 0:
+                query_string = '"' + word + '"'
+            else:
+                query_string += ' AND ' + '"' + word + '"'
+        return query_string
