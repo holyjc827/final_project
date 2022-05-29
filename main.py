@@ -1,9 +1,11 @@
 import itertools
+from document_parser import DocumentParser
+from IPython.core.debugger import set_trace
 
 class SearchQueryGenerator:
-    def __init__(self, type, document):
+    def __init__(self, type, document_path):
         self.type = type
-        self.document = document
+        self.document_path = document_path
 
     def generate_search_query(self):
         most_repeated_keywords = self.__get_most_repeated_keywords()
@@ -17,17 +19,8 @@ class SearchQueryGenerator:
 
     # Private methods 
 
-    def __tokenize(self):
-        sentences = self.document.split(".")
-        tokens = []
-        for sentence in sentences:
-            words = sentence.split(" ")
-            tokens.append(words)
-        cleaned_tokens = [word for word in sum(tokens,[]) if word]
-        return cleaned_tokens
-    
     def __get_most_repeated_keywords(self):
-        tokens = self.__tokenize()
+        tokens = DocumentParser.tokenize(self.document_path)
         token_dict = {}
         repeated_keywords = []
         for token in tokens:
@@ -41,5 +34,6 @@ class SearchQueryGenerator:
         repeated_keywords = [k for k, v in dict(itertools.islice(token_dict.items(), 5)).items()]
         return repeated_keywords
 
-app = SearchQueryGenerator("job", "to me you are beautiful. I hope you are doing well.")
-print(app.generate_search_query())
+if __name__ == '__main__':
+    app = SearchQueryGenerator("job", "data/backend.txt")
+    print(app.generate_search_query())

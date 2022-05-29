@@ -1,0 +1,91 @@
+Senior Backend Developer
+Job description
+Looking for a meaningful experience in a fast-growing tech company with a human-centric approach? Join our amazing team to help grow the world’s most popular apps and games.
+
+
+Who we are?
+
+AppTweak is the leading App Store Optimization (ASO) tool - think SEO but then for the app stores. AppTweak empowers 1,600+ mobile leaders - such as Amazon, Jam City, Yelp, and Adobe - to grow their apps and games with actionable insights in a simple interface.
+
+Launched in 2014, AppTweak has grown to a team of more than 75 people with offices in Brussels, San Francisco, Tokyo and Bengaluru. In April 2021, AppTweak raised a $22 million investment in series B funding. We’re gearing up for fast growth and are looking for ambitious individuals to join our team.
+
+
+
+
+We are looking for an amazing Senior Back-end to join our joyful team to skyrocket our projects in 2022 and beyond!
+
+
+
+About the Role
+
+To help us bring AppTweak to the next level, you will work closely in a small multi-skilled team responsible for part of the AppTweak tool and infrastructure.
+
+As a Senior Back-end developer, we expect you to have a strong understanding of the current tech environment and help us make the right decisions by understanding business requirements and translating these into strong scalable systems.
+
+Once the technical design is complete, we expect you to take part in the implementation with the rest of your team. Your focus will be to:
+
+Architecture and build scrapers and ETL pipelines that ingest the data that power AppTweak
+Architecture and build API's that make those data available
+Monitor and optimize our message queue systems
+Monitor and optimize our infrastructure
+Technologies we use
+
+Our SAAS product is a Ruby on Rails application serving a React Single Page Application.
+Our scrapers and crawlers get their tasks from SQS queues and store data in a mix of MySQL, Redshift, MongoDB, PgSQL, and Elasticsearch databases. They are built using the Ruby programming language (without Rails).
+Our JSON REST API's are built in Ruby as well using the Sinatra lightweight framework. This (and the scrapers) is where we anticipate you'll be working most of the time.
+We deploy code using Concourse as a CI/CD pipeline to build Docker images deployed on a Kubernetes cluster hosted on AWS. 
+We also have several Python services, mainly to run ML models developed by our data scientists.
+We monitor everything using Prometheus and Grafana to visualize time series and metrics in an efficient manner.
+We follow an agile development process inspired by SCRUM, but adapted to our needs.
+
+
+Requirements
+What we expect from you:
+
+Bachelor or master's degree in computer science or engineering
+5+ years of experience writing backend code
+Creating database schemas (design data models, not only writing SQL queries) that represent and support business processes
+Data migration, transformation, and scripting doesn't scare you
+Experience with AWS / Kubernetes / Docker is a plus
+Bonus points
+
+GitHub profile or link to open source work
+Full-stack experience
+You love food! 
+
+
+What's in it for you?
+
+1. We care about you
+
+An exciting and fast-growing company with a people-first culture. “Diversity” and “work-life balance” are not just buzzwords at AppTweak.
+
+Flexibility in your work and opportunities for continuous learning and creative thinking.
+
+Supportive and collaborative environment focused on personal growth.
+
+Hybrid office/work from home policy.
+
+20 paid holidays per year + 12 days RTT on top of the fundamentals (meal vouchers, annual “éco-chèques”, hospitalization & group insurance, end-of-the-year bonus, etc.)
+
+Fresh fruits, nuts, and snacks self-serve in the office.
+
+1 volunteering day every quarter dedicated to helping a Brussels-based organization.
+
+Chance to discover new food recipes, because yes, we love food!
+
+2. An inspiring environment
+
+Chance to connect with a variety of high-profile apps and games across different verticals.
+
+A unique company culture based on 4 values: Learn, Play, Perform, Friendly.
+
+A diverse team within a flat hierarchy. Altogether we speak more than 15 languages.
+
+Bi-yearly company-wide team building in Europe to meet your colleagues from all over the world.
+
+A combination of personal and company growth to accelerate your career and help you reach your goals.
+
+Regular general team meetings and demo days to make sure everyone is aligned with AppTweak's growth path, mission and vision.
+
+Salary depending on the profile: from 42k€ up to 70k€ annual gross (+ 6% and 17% of the value of the salary in benefits)
