@@ -16,7 +16,7 @@ class SearchQueryGenerator:
                 query_string += ' AND ' + '"' + word + '"'
         return query_string
 
-    def classify(self):
+    def classify(self): # TODO: classify the document with machine learning algo
         match self.type:
             case 'developer':
                 return self.generate_search_query()
