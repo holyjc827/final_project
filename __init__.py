@@ -1,1 +1,1 @@
-from IPython.core.debugger import set_trace
+from .main import App
