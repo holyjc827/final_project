@@ -16,6 +16,13 @@ class SearchQueryGenerator:
                 query_string += ' AND ' + '"' + word + '"'
         return query_string
 
+    def classify(self):
+        match self.type:
+            case 'developer':
+                return self.generate_search_query()
+            case _:
+                return
+
     # Private methods 
 
     def __get_most_repeated_keywords(self):

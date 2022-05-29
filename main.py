@@ -7,10 +7,10 @@ class App:
         self.document_path = document_path
 
     def execute(self):
-        c = util.SearchQueryGenerator(self.type, self.document_path).generate_search_query()
+        c = util.SearchQueryGenerator(self.type, self.document_path).classify()
         print(c)
 
 
 if __name__ == '__main__':
-    application = App("job","data/backend.txt")
+    application = App("developer","data/backend.txt")
     application.execute()
