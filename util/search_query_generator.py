@@ -2,11 +2,16 @@ import itertools
 from .document_parser import DocumentParser
 
 class SearchQueryGenerator:
-    def __init__(self, type, document_path):
+    def __init__(self, type, document_path, gender, location):
         self.type = type
         self.document_parser = DocumentParser(document_path)
+        self.gender = gender,
+        self.location = location
 
-    def classify(self): # TODO: classify the document with machine learning algo
+    def generate_search_query(self):
+        if self.type is None:
+            self.__classify()
+
         match self.type:
             case 'developer':
                 return self.__generate_search_query()
@@ -14,6 +19,10 @@ class SearchQueryGenerator:
                 return
 
     # Private methods 
+
+    def __classify(self): # TODO: classify the document with machine learning algo
+        self.type = "developer"
+        print(f"The job type is classified as {self.type}")
 
     def __get_most_repeated_keywords(self):
         tokens = self.document_parser.tokenize()
