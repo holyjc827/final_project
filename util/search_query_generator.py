@@ -1,7 +1,7 @@
 import itertools
 import pickle
 from .document_parser import DocumentParser
-from model import jd_vectorizer
+from util import jd_vectorizer, constant
 from IPython.core.debugger import set_trace
 
 class SearchQueryGenerator:
@@ -11,51 +11,18 @@ class SearchQueryGenerator:
         self.document_parser = DocumentParser(document_path)
         self.gender = gender,
         self.location = location
-        self.job_type_mapping = {'Accounting/Auditing': 1, 
-                                 'Administrative': 2, 
-                                 'Advertising': 3, 
-                                 'Art/Creative': 4, 
-                                 'Business Analyst': 5, 
-                                 'Business Development': 6, 
-                                 'Consulting': 7, 
-                                 'Customer Service': 8, 
-                                 'Data Analyst': 9, 
-                                 'Design': 10, 
-                                 'Distribution': 11, 
-                                 'Education': 12, 
-                                 'Engineering': 13, 
-                                 'Finance': 14, 
-                                 'Financial Analyst': 15, 
-                                 'General Business': 16, 
-                                 'Health Care Provider': 17, 
-                                 'Human Resources': 18, 
-                                 'Information Technology': 19, 
-                                 'Legal': 20, 
-                                 'Management': 21, 
-                                 'Manufacturing': 22, 
-                                 'Marketing': 23, 
-                                 'Other': 24, 
-                                 'Product Management': 25, 
-                                 'Production': 26, 
-                                 'Project Management': 27, 
-                                 'Public Relations': 28, 
-                                 'Purchasing': 29, 
-                                 'Quality Assurance': 30, 
-                                 'Research': 31, 
-                                 'Sales': 32, 
-                                 'Science': 33, 
-                                 'Strategy/Planning': 34, 
-                                 'Supply Chain': 35, 
-                                 'Training': 36, 
-                                 'Writing/Editing': 37}
 
     def generate_search_query(self):
         if self.type is None:
             self.__classify()
 
-        match self.type:
-            case 'developer':
-                return self.__generate_search_query()
+        for key, value in constant.JOB_MAPPING.items():
+            if self.type in value:
+                job_group = key
+
+        match job_group:
+            case 'Science':
+                return self.__generate_search_query_for_science(job_group)
             case _:
                 return
 
@@ -63,9 +30,9 @@ class SearchQueryGenerator:
 
     def __classify(self): # TODO: classify the document with machine learning algo
         pickled_model = pickle.load(open('rfc_final.pkl', 'rb'))
-        vectorized_document = jd_vectorizer.JDVectorizer.vectorize(open(self.document_path, "r"))
+        vectorized_document = jd_vectorizer.vectorize(open(self.document_path, "r"))
         result = pickled_model.predict(vectorized_document)
-        self.type = list(self.job_type_mapping.keys())[list(self.job_type_mapping.values()).index(result[0])]
+        self.type = list(constant.JOB_TYPE_MAPPING.keys())[list(constant.JOB_TYPE_MAPPING.values()).index(result[0])]
         print(f"The job type is classified as {self.type}")
 
     def __get_most_repeated_keywords(self):
@@ -83,12 +50,47 @@ class SearchQueryGenerator:
         repeated_keywords = [k for k, v in dict(itertools.islice(token_dict.items(), 5)).items()]
         return repeated_keywords
     
-    def __generate_search_query(self):
+    def __generate_search_query_with_most_relevant_keywords(self, job_group):
+        tokens = self.document_parser.tokenize()
+        relevant_keywords = []
+        developer_classification = []
+        for token in tokens:
+            keyword = token.lower()
+            if keyword in constant.SENIORITY:
+                relevant_keywords.append(token)
+            if job_group == "Science":
+                if keyword in constant.SCIENCE_HARD_SKILL:
+                    relevant_keywords.append(token)
+                if keyword in constant.DEVELOPER_CLASSIFICATION:
+                    developer_classification.append(token)
+        query = " AND ".join(list(set(relevant_keywords)))
+        developer_query = " OR ".join(list(set(developer_classification)))
+        return f"(({query}) AND ({developer_query}))"
+
+    def __generate_search_query_with_most_repeated_keywords(self):
         most_repeated_keywords = self.__get_most_repeated_keywords()
         query_string = ""
         for word in most_repeated_keywords:
             if len(query_string) == 0:
-                query_string = '"' + word + '"'
+                query_string += word
             else:
-                query_string += ' AND ' + '"' + word + '"'
+                query_string += ' AND ' + word
         return query_string
+
+    def __get_basis_search_query_string(self):
+        gender = "(male OR female)"
+        location = "(Anywhere OR Remote)"
+        job = "(job OR occupation OR internship)"
+        query = " AND ".join([gender, location, job])
+        return f"({query})"
+
+    def __generate_search_query_for_science(self, job_group):
+        basis = self.__get_basis_search_query_string()
+        repeated = self.__generate_search_query_with_most_repeated_keywords()
+        relevant = self.__generate_search_query_with_most_relevant_keywords(job_group)
+        science = "(science OR technology)"
+        degree = "(bachelor OR masters)"
+        platform = "(Linkedin OR Glassdoor OR Indeed OR Monster OR Google)"
+        query = " AND ".join([basis, repeated, relevant, science, degree, platform])
+        return query 
+        
