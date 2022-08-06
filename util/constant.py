@@ -47,6 +47,6 @@ JOB_TYPE_MAPPING = {'Accounting/Auditing': 1,
                     'Training': 36, 
                     'Writing/Editing': 37}
 
-SENIORITY = ["junior", "medior", "intermediate", "senior", "internship"]
+SENIORITY = ["junior", "medior", "intermediate", "senior", "internship", "experienced"]
 SCIENCE_HARD_SKILL = ["java", "javascript", "engineer", "engineering", "api", "ruby", "python", "database", "c++", "c#", "go", "rust", "cloud", "computer", "aws", "mongodb", "postgresql", "mysql", "sql", "kubernetes", "docker"]
 DEVELOPER_CLASSIFICATION = ["backend", "back-end", "frontend", "front-end", "full-stack", "fullstack"]
