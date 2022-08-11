@@ -17,11 +17,21 @@ import jd_vectorizer
 df = pandas.read_csv("./job_posting.csv")
 df = df.drop(['job_id', 'location', 'department', 'company_profile', 'salary_range', 'benefits', 'telecommuting', 'has_company_logo', 'has_questions', 'employment_type', 'required_experience', 'required_education', 'industry', 'fraudulent'], axis=1)
 df = df.dropna().reset_index(drop=True)
+
+df['text'] = df['title'] + " " + df['description'] + " " + df['requirements']
+too_big = df['function'].value_counts()[df['function'].value_counts() > 100].index.tolist()
+too_less = df['function'].value_counts()[df['function'].value_counts() < 100].index.tolist()
+
+for job_type in too_big:
+    df.drop(df.index[df['function']==job_type][100:], inplace=True)
+
+for job_type in too_less:
+    df.drop(df.index[df['function']==job_type], inplace=True)
+df.fillna(" ", inplace = True)
+df = df.reset_index()
 le = LabelEncoder()
 df['job_type'] = le.fit_transform(df['function'])
 mapping = dict(zip(le.classes_, range(1, len(le.classes_)+1)))
-df.fillna(" ", inplace = True)
-df['text'] = df['title'] + " " + df['description'] + " " + df['requirements']
 
 df = df.drop(['title', 'description', 'function', 'requirements'], axis=1)
 df = jd_vectorizer.clean_text(df)
@@ -31,7 +41,7 @@ lemmatizer = WordNetLemmatizer()
 df['text'] = df['text'].apply(lambda x:' '.join([lemmatizer.lemmatize(word) for word in x.split() if word not in (stop_words)]))
 df['text'][0]
 
-tf = TfidfVectorizer(max_features=200)
+tf = TfidfVectorizer(max_features=199)
 data = pandas.DataFrame(tf.fit_transform(df['text']).toarray(),columns=tf.get_feature_names_out())
 df.drop(['text'],axis=1,inplace=True)
 main_df = pandas.concat([df,data],axis=1)
@@ -45,7 +55,7 @@ Y = main_df['job_type']
 
 X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.2, random_state=0)
 
-rfc = RandomForestClassifier(n_estimators=200,bootstrap=True)
+rfc = RandomForestClassifier(n_estimators=200 ,bootstrap=True)
 rfc.fit(X_train, Y_train)
 
 rf_pred = rfc.predict(X_test)

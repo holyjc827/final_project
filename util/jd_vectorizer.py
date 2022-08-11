@@ -4,7 +4,6 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from nltk.stem import WordNetLemmatizer
 
 def vectorize(document):
-
     lines = document.read().split(".")
     text = ""
     for line in lines:

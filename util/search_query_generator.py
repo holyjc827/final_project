@@ -59,7 +59,7 @@ class SearchQueryGenerator:
                 token_dict.setdefault(token, 1)
         
         token_dict = dict(sorted(token_dict.items(), key=lambda item: item[1], reverse=True))
-        repeated_keywords = [k for k, v in dict(itertools.islice(token_dict.items(), 5)).items()]
+        repeated_keywords = [k for k, v in dict(itertools.islice(token_dict.items(), 20)).items()]
         return repeated_keywords
     
     def __generate_search_query_with_most_relevant_keywords(self, job_group):
