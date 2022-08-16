@@ -15,8 +15,8 @@ class SearchQueryGenerator:
         if self.type is None and self.params["job_type"] is None:
             self.__classify()
         job_type = self.params["job_type"] or self.type
-
-        match self.type:
+       
+        match job_type:
             case 'Science/Engineering':
                 return self.__generate_search_query_for_science(job_type)
             case 'Service':
@@ -51,7 +51,7 @@ class SearchQueryGenerator:
                 token_dict.setdefault(token, 1)
         
         token_dict = dict(sorted(token_dict.items(), key=lambda item: item[1], reverse=True))
-        repeated_keywords = [k for k, v in dict(itertools.islice(token_dict.items(), 20)).items()]
+        repeated_keywords = [k for k, v in dict(itertools.islice(token_dict.items(), 5)).items()]
         return repeated_keywords
     
     def __generate_search_query_with_most_relevant_keywords(self, job_group):
@@ -63,7 +63,7 @@ class SearchQueryGenerator:
             keyword = token.lower()
             if keyword in constant.SENIORITY:
                 seniority.append(token)
-            if job_group == "Science":
+            if job_group == "Science/Engineering":
                 if keyword in constant.SCIENCE_HARD_SKILL:
                     relevant_keywords.append(token)
                 if keyword in constant.DEVELOPER_CLASSIFICATION:
