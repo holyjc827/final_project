@@ -22,11 +22,26 @@ df['text'] = df['title'] + " " + df['description'] + " " + df['requirements']
 too_big = df['function'].value_counts()[df['function'].value_counts() > 100].index.tolist()
 too_less = df['function'].value_counts()[df['function'].value_counts() < 100].index.tolist()
 
-for job_type in too_big:
-    df.drop(df.index[df['function']==job_type][100:], inplace=True)
+mask = (df.function == "Writing/Editing") | (df.function == "Advertising") | (df.function ==  "Design") | (df.function == "Marketing") | (df.function == "Art/Creative")
+df.loc[mask, 'function'] = 'Creative'
 
-for job_type in too_less:
-    df.drop(df.index[df['function']==job_type], inplace=True)
+mask = (df.function == "Administrative") | (df.function == "Legal") | (df.function == "Training") | (df.function == "Public Relations") | (df.function == "Human Resources") | (df.function ==  "Customer Service") | (df.function == "Health Care Provider") | (df.function == "Education") | (df.function == "Consulting")
+df.loc[mask, 'function'] = 'Service'
+
+mask = (df.function == "Accounting/Auditing") | (df.function == "Financial Analyst")
+df.loc[mask, 'function'] = 'Finance'
+
+mask = (df.function == "Engineering") | (df.function == "Science") | (df.function == "Distribution") | (df.function == "Supply Chain") | (df.function == "Research") | (df.function == "Data Analyst") | (df.function == "Manufacturing") | (df.function ==  "Information Technology") | (df.function == "Quality Assurance") | (df.function == "Production")
+df.loc[mask, 'function'] = 'Science/Engineering'
+
+mask = (df.function == "Business Development") | (df.function == "Purchasing") | (df.function == "Strategy/Planning") | (df.function == "General Business") | (df.function == "Business Analyst") | (df.function == "Management") | (df.function ==  "Product Management") | (df.function == "Project Management")
+df.loc[mask, 'function'] = 'Business'
+
+# for job_type in too_big:
+#     df.drop(df.index[df['function']==job_type][100:], inplace=True)
+
+# for job_type in too_less:
+#     df.drop(df.index[df['function']==job_type], inplace=True)
 df.fillna(" ", inplace = True)
 df = df.reset_index()
 le = LabelEncoder()
