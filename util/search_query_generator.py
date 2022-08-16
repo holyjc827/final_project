@@ -5,39 +5,31 @@ from util import jd_vectorizer, constant
 from IPython.core.debugger import set_trace
 
 class SearchQueryGenerator:
-    def __init__(self, type, document_path, gender, location):
-        self.type = type
+    def __init__(self, params, document_path):
+        self.type = None
         self.document_path = document_path
         self.document_parser = DocumentParser(document_path)
-        self.gender = gender,
-        self.location = location
+        self.params = params
 
     def generate_search_query(self):
-        if self.type is None:
+        if self.type is None and self.params["job_type"] is None:
             self.__classify()
+        job_type = self.params["job_type"] or self.type
 
-        for key, value in constant.JOB_MAPPING.items():
-            if self.type in value:
-                job_group = key
-        print(f"The job group is classified as {job_group}")
-        
-        match job_group:
-            case 'Science':
-                return self.__generate_search_query_for_science(job_group)
+        match self.type:
+            case 'Science/Engineering':
+                return self.__generate_search_query_for_science(job_type)
             case 'Service':
-                return self.__generate_search_query_for_service(job_group)
+                return self.__generate_search_query_for_service(job_type)
             case 'Creative':
-                return self.__generate_search_query_for_creative(job_group)
-            case 'Strategic':
-                return self.__generate_search_query_for_strategic(job_group)
-            case 'Legal':
-                return self.__generate_search_query_for_legal(job_group)
+                return self.__generate_search_query_for_creative(job_type)
+            case 'Business':
+                return self.__generate_search_query_for_business(job_type)
             case 'Finance':
-                return self.__generate_search_query_for_finance(job_group)
-            case 'Manufacturing':
-                return self.__generate_search_query_for_manufacturing(job_group)
+                return self.__generate_search_query_for_finance(job_type)
             case 'Other':
-                return self.__generate_search_query_for_other(job_group)
+                return self.__generate_search_query_for_other(job_type)
+
     # Private methods 
 
     def __classify(self):
@@ -92,10 +84,11 @@ class SearchQueryGenerator:
         return query_string
 
     def __get_basis_search_query_string(self):
-        gender = "(male OR female)"
-        location = "(Anywhere OR Remote)"
-        job = "(job OR occupation OR internship)"
-        degree = "(bachelor OR masters)"
+        gender = self.params["gender"] or "(male OR female)"       
+        location = self.params["location"] or "(Anywhere OR Remote)"
+        job = self.params["job"] or "(full time OR full-time OR part-time OR part time OR internship)"
+        degree = self.params["degree"] or "(bachelor OR masters)"
+        seniority = self.params["seniority"] or "(any level OR any seniority)"
         platform = "(Linkedin OR Glassdoor OR Indeed OR Monster OR Google)"
         query = " AND ".join([gender, location, job, degree, platform])
         return f"({query})"
@@ -124,20 +117,12 @@ class SearchQueryGenerator:
         query = " AND ".join([basis, repeated, relevant, service])
         return query
 
-    def __generate_search_query_for_strategic(self, job_group):
+    def __generate_search_query_for_business(self, job_group):
         basis = self.__get_basis_search_query_string()
         repeated = self.__generate_search_query_with_most_repeated_keywords()
         relevant = self.__generate_search_query_with_most_relevant_keywords(job_group)
         strategic = "(business OR analysis OR analyst OR management OR manage OR strategic OR strategy OR supply)"        
         query = " AND ".join([basis, repeated, relevant, strategic])
-        return query
-
-    def __generate_search_query_for_legal(self, job_group):
-        basis = self.__get_basis_search_query_string()
-        repeated = self.__generate_search_query_with_most_repeated_keywords()
-        relevant = self.__generate_search_query_with_most_relevant_keywords(job_group)
-        legal = "(legal OR law OR lawyer OR litigation OR regulation)"        
-        query = " AND ".join([basis, repeated, relevant, legal])
         return query
 
     def __generate_search_query_for_finance(self, job_group):
@@ -146,14 +131,6 @@ class SearchQueryGenerator:
         relevant = self.__generate_search_query_with_most_relevant_keywords(job_group)
         finance = "(capital OR finance OR money OR bank OR accounting)"        
         query = " AND ".join([basis, repeated, relevant, finance])
-        return query
-
-    def __generate_search_query_for_manufacture(self, job_group):
-        basis = self.__get_basis_search_query_string()
-        repeated = self.__generate_search_query_with_most_repeated_keywords()
-        relevant = self.__generate_search_query_with_most_relevant_keywords(job_group)
-        manufacture = "(produce OR manufacture OR manufacturing OR quality)"        
-        query = " AND ".join([basis, repeated, relevant, manufacture])
         return query
 
     def __generate_search_query_for_other(self, job_group):
