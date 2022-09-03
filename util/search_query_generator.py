@@ -13,7 +13,10 @@ class SearchQueryGenerator:
 
     def generate_search_query(self):
         if self.type is None and self.params["job_type"] is None:
-            self.__classify()
+            try:
+                self.__classify()
+            except ValueError:
+                print(" The provided job description is too short. Please provide a document that has at least 200 words.")
         job_type = self.params["job_type"] or self.type
        
         match job_type:
@@ -36,7 +39,6 @@ class SearchQueryGenerator:
         pickled_model = pickle.load(open('rfc_final.pkl', 'rb'))
         vectorized_document = jd_vectorizer.vectorize(open(self.document_path, "r"))
         result = pickled_model.predict(vectorized_document)
-        
         self.type = list(constant.JOB_TYPE_MAPPING.keys())[list(constant.JOB_TYPE_MAPPING.values()).index(result[0])]
 
     def __get_most_repeated_keywords(self):
