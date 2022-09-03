@@ -14,4 +14,6 @@ In order to run this application, please follow the steps:
 ```python
 python3 main.py 
 ```
-1. 
+1. Follow the instruction appearing on the terminal.
+    - The job description must be in txt format
+    - You need to pass the correct location of the document with its extension.
